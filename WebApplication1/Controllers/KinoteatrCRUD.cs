@@ -4,6 +4,7 @@ using Npgsql;
 using Dapper;
 using WebApplication1.Roots;
 using WebApplication1.RootsTDO;
+using WebApplication1.MyPattern;
 
 namespace WebApplication1.Controllers
 {
@@ -11,67 +12,47 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class KinoteatrCRUD : ControllerBase
     {
-        public string connectionString = "Server=localhost;Port=16172;Database=api4;username=postgres;Password=axihub;";
+        public IKinoteatrRepository _kino;
+
+        public KinoteatrCRUD (IKinoteatrRepository kino)
+        {
+            _kino = kino;
+        }
 
         [HttpGet]
         public List<Kinoteatr> GetKinoteatrs()
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                return connection.Query<Kinoteatr>("select * from kinoteatrs").ToList();
-            }
+            return _kino.GetKinoteatrs();
         }
 
         [HttpGet]
         public List<Kinoteatr> GetIdKinoteatr(int id)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                return connection.Query<Kinoteatr>($"select * from kinoteatrs where kinoteatr_id = {id}").ToList();
-            }
+            return _kino.GetIdKinoteatr(id);
         }
 
         [HttpPost]
         public KinoteatrTDO InsertKinoteatr(KinoteatrTDO kinoteatr)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                connection.Query<KinoteatrTDO>($"insert into kinoteatrs(name) values ('{kinoteatr.name}')").ToList();
-                return kinoteatr;
-            }
+            return _kino.InsertKinoteatr(kinoteatr);
         }
 
         [HttpPut]
         public KinoteatrTDO UpdateKinoteatr(int id, KinoteatrTDO kinoteatr)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                connection.Query<KinoteatrTDO>($"update kinoteatrs set name = '{kinoteatr.name}' where kinoteatr_id = {id}").ToList();
-                return kinoteatr;
-            }
+            return _kino.UpdateKinoteatr(id, kinoteatr);
         }
 
         [HttpPatch]
         public int UpdatePatchKinoteatr(int id, string name)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                int num = connection.Execute($"update kinoteatrs set name = @name where kinoteatr_id = @id;", new { Id = id, Name = name });
-
-                return num;
-            }
+            return _kino.UpdatePatchKinoteatr(id, name);
         }
 
         [HttpDelete]
         public int DeleteKinoteatr(int id)
         {
-            using (NpgsqlConnection connection = new NpgsqlConnection(connectionString))
-            {
-                int x = connection.Execute($"delete from kinoteatr_cinema_person where kinoteatr_id = @id;", new { Id = id });
-                int num = connection.Execute($"delete from kinoteatrs where id = @id;", new { Id = id });
-
-                return num;
-            }
+            return _kino.DeleteKinoteatr(id);
         }
     }
 }
