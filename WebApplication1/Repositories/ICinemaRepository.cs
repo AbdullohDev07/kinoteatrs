@@ -6,9 +6,9 @@ namespace WebApplication1.MyPattern
     public interface ICinemaRepository
     {
         public List<Cinema> GetCinemas();
-        public List<Cinema> GetIdCinema(int id);
-        public CinemaTDO InsertCinema(CinemaTDO cinema);
-        public CinemaTDO UpdateCinema(int id, CinemaTDO cinema);
+        public List<CinemaTDO> GetIdCinema(int id);
+        public Cinema InsertCinema(Cinema cinema);
+        public Cinema UpdateCinema(Cinema cinema);
         public int UpdatePatchCinema(int id, string name);
         public int DeleteCinema(int id);
     }

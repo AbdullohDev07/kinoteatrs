@@ -31,50 +31,50 @@ namespace WebApplication1.MyPattern
             }
         }
 
-        public List<Cinema> GetIdCinema(int id)
+        public List<CinemaTDO> GetIdCinema(int id)
         {
             try 
             {
                 using (NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
-                    return connection.Query<Cinema>($"select * from cinemas where cinama_id = {id}").ToList();
+                    return connection.Query<CinemaTDO>($"select name, price from cinemas where cinama_id = {id}").ToList();
                 } 
             }
             catch 
             {
-                return new List<Cinema>();
+                return new List<CinemaTDO>();
             }
         }
 
-        public CinemaTDO InsertCinema(CinemaTDO cinema)
+        public Cinema InsertCinema(Cinema cinema)
         {
             try
             {
                 using (NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
-                    connection.Query<CinemaTDO>($"insert into cinemas(name, price) values ('{cinema.name}', {cinema.price})").ToList();
+                    connection.Query<Cinema>($"insert into cinemas(name, price) values ('{cinema.name}', {cinema.price})").ToList();
                     return cinema;
                 }
             }
             catch
             {
-                return new CinemaTDO();
+                return new Cinema();
             }
         }
 
-        public CinemaTDO UpdateCinema(int id, CinemaTDO cinema)
+        public Cinema UpdateCinema(Cinema cinema)
         {
             try
             {
                 using (NpgsqlConnection connection = new NpgsqlConnection(_configuration.GetConnectionString("DefaultConnection")))
                 {
-                    connection.Query<CinemaTDO>($"update cinemas set name = '{cinema.name}', price = {cinema.price} where cinama_id = {id}").ToList();
+                    connection.Query<CinemaTDO>($"update cinemas set name = '{cinema.name}', price = {cinema.price} where cinama_id = {cinema.cinama_id}").ToList();
                     return cinema;
                 }
             }
             catch
             {
-                return new CinemaTDO();
+                return new Cinema();
             }
         }
 

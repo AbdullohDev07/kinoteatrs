@@ -4,6 +4,7 @@ using Npgsql;
 using WebApplication1.Roots;
 using WebApplication1.RootsTDO;
 using WebApplication1.MyPattern;
+using WebApplication1.Services.IService;
 
 namespace WebApplication1.Controllers
 {
@@ -11,21 +12,21 @@ namespace WebApplication1.Controllers
     [Route("[controller]/[action]")]
     public class CinemaCRUD : ControllerBase
     {
-        public ICinemaRepository _cinem;
+        public ICinemaService _cinem;
 
-        public CinemaCRUD (ICinemaRepository c)
+        public CinemaCRUD (ICinemaService c)
         {
             _cinem = c;
         }
 
         [HttpGet]
-        public List<Cinema> GetCinemas()
+        public IActionResult GetCinemas()
         {
-            return _cinem.GetCinemas();
+            return Ok(_cinem.GetCinemas());
         }
 
         [HttpGet]
-        public List<Cinema> GetIdCinema(int id)
+        public List<CinemaTDO> GetIdCinema(int id)
         {
            return _cinem.GetIdCinema(id);
         }
